@@ -1,6 +1,6 @@
 # Proposal
 
-[Back](../)
+[Back](./)
 
 While working on other projects, I have found I want to have a fun quiz aspect I can have my users go through to earn different things associated to that project.
 
