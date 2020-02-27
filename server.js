@@ -18,7 +18,16 @@ const cookieParser = require('cookie-parser');
 
 //=================================MIDDLEWARE=================================\\
 
-
+const checkAuth = (req, res, next) => {
+    if (typeof req.cookies.nToken === "undefined" || req.cookies.nToken === null) {
+        req.user = null;
+    } else {
+        const token = req.cookies.nToken;
+        const decodedToken = jwt.decode(token, { complete: true }) || {};
+        req.user = decodedToken.payload;
+    }
+    next();
+};
 
 app.use(cookieParser());
 
@@ -35,7 +44,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Add after body parser initialization!
 // app.use(expressValidator());
 
+app.use(checkAuth);
+
+
 //=================================CONTROLLERS=================================\\
+
+//Authentication App
+// require('./controllers/auth.js')(app);
 
 //Quiz App
 require('./controllers/quizzes.js')(app);
