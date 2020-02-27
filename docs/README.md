@@ -3,14 +3,15 @@
 [![GitHub](https://img.shields.io/github/forks/ChrisBarnes7404/Quiz_API.svg?style=flat-square)](https://github.com/ChrisBarnes7404/Quiz_API/network)
 [![GitHub](https://img.shields.io/github/issues/ChrisBarnes7404/Quiz_API.svg?style=flat-square)](https://github.com/ChrisBarnes7404/Quiz_API/issues)
 
-## [PROJECT PROPOSAL](./proposal.md)
-## [TDD APPROACH](./tdd.md)
-## [PROJECT SCORING](./scoring.md)
-
 ## Objectives
 - Practice the SDLC by completing a project from proposal to deployment with a focus on Test Driven Development practices.
 - Utilize all the techniques learned in class in a single cohesive project.
 - Produce a portfolio-worthy authenticated API to show off to the world!
+
+## [PROJECT PROPOSAL](./proposal.md)
+## [TDD APPROACH](./tdd.md)
+## [PROJECT SCORING](./scoring.md)
+## [User Instructions](./instructions.md)
 
 
 ## HOW TO START THIS PROJECT
