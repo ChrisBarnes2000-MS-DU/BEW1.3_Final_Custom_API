@@ -4,6 +4,8 @@
 [![GitHub](https://img.shields.io/github/issues/ChrisBarnes7404/Quiz_API.svg?style=flat-square)](https://github.com/ChrisBarnes7404/Quiz_API/issues)
 
 ## [PROJECT PROPOSAL](/proposal.md)
+## [TDD APPROACH](/tdd.md)
+## [PROJECT SCORING](/scoring.md)
 
 ## Objectives
 - Practice the SDLC by completing a project from proposal to deployment with a focus on Test Driven Development practices.

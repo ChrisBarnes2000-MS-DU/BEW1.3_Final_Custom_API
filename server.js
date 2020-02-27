@@ -2,7 +2,6 @@
 require('dotenv').config();
 const express = require('express');
 
-
 // Set db
 require('./data/quiz-db');
 
@@ -14,7 +13,7 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 
 const cookieParser = require('cookie-parser');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 //=================================MIDDLEWARE=================================\\
 
@@ -42,21 +41,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Add after body parser initialization!
-// app.use(expressValidator());
+app.use(expressValidator());
 
 app.use(checkAuth);
 
 
 //=================================CONTROLLERS=================================\\
 
-//Authentication App
-// require('./controllers/auth.js')(app);
-
-//Quiz App
-require('./controllers/quizzes.js')(app);
-
-
-
+require('./controllers/routes')(app);
 
 //=================================LISTEN=================================\\
 //To run tests export our app variables that mocha needs in order to successfully run our tests.

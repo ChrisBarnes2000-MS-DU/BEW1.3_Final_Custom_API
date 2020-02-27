@@ -1,5 +1,5 @@
-const server = require("../server.js");
-const User = require('../models/user.js')
+const server = require("../server");
+const User = require('../models/user')
 const mongoose = require('mongoose');
 const chaiHttp = require("chai-http");
 const chai = require('chai');
@@ -35,8 +35,8 @@ describe('## Auth', () => {
             .then(() => done())
     })
 
-    it("should not be able to login if they have not registered", function (done) {
-        agent.post("/login", { email: "wrong@wrong.com", password: "nope" }).end(function (err, res) {
+    it("should not be able to login if they have not registered", (done) => {
+        agent.post("/login", { email: "wrong@wrong.com", password: "nope" }).end( (err, res) => {
             res.status.should.be.equal(401);
             done();
         });
@@ -69,7 +69,7 @@ describe('## Auth', () => {
                     console.log(res.body)
                     assert.equal(res.status, 200)
                     assert.exists(res.body.jwttoken)
-                    agent.should.have.cookie("nToken");
+                    agent.should.have.cookie("jwttoken");
                     return done()
                 }).catch(err => {
                     console.log(err)
@@ -79,15 +79,15 @@ describe('## Auth', () => {
     })
 
     // logout
-    it("should be able to logout", function (done) {
-        agent.get("/logout").end(function (err, res) {
+    it("should be able to logout", (done) => {
+        agent.get("/logout").end( (err, res) => {
             res.should.have.status(200);
-            agent.should.not.have.cookie("nToken");
+            agent.should.not.have.cookie("jwttoken");
             done();
         });
     });
 
-    after(function () {
+    after( () => {
         agent.close()
     }); 
 

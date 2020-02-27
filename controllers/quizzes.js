@@ -1,12 +1,7 @@
-const Quiz = require('../models/quizzes.js');
+const Quiz = require('../models/quizzes');
 
 module.exports = app => {
-    // About
-    app.get('/about', (req, res) => {
-        res.send({ message: 'This was design to be a functioning Quiz API!' })
-    })
-
-    // INDEX
+    // QUIZ INDEX
     app.get('/', (req, res) => {
         Quiz.find().then(result => {
             res.json(result);
