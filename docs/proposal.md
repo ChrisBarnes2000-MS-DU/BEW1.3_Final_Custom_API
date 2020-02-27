@@ -1,6 +1,6 @@
 # Proposal
 
-[Back](/)
+[Back](../)
 
 While working on other projects, I have found I want to have a fun quiz aspect I can have my users go through to earn different things associated to that project.
 
@@ -19,7 +19,7 @@ When working with this API developers shall have the ability to `CREATE`, `READ`
     Quiz API
 * **Day 2**: Write API proposal.
     Your looking at it
-* **Day 5**: Write [API tests](./test).
+* **Day 5**: Write [API tests](../test).
 * **Day 6**: Continue writing API tests.
 * **Day 8**: Write Authentication and Authorization tests.
 * **Day 10**: Implement API.
