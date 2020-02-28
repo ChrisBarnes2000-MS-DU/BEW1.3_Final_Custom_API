@@ -1,21 +1,19 @@
 //=================================INITIAL=================================\\
 require('dotenv').config();
-const express = require('express');
+
+const PORT = process.env.PORT;
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+
+const app = require('./config/express');
+const router = require('./controllers/routes');
 
 // Set db
 require('./data/quiz-db');
 
-const app = express();
-const PORT = process.env.PORT;
-
-const exphbs = require('express-handlebars').create({ extname: 'hbs' });
-const bodyParser = require('body-parser');
-const expressValidator = require('express-validator');
-
-const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
-
 //=================================MIDDLEWARE=================================\\
+
+app.use(cookieParser());
 
 const checkAuth = (req, res, next) => {
     if (typeof req.cookies.nToken === "undefined" || req.cookies.nToken === null) {
@@ -28,27 +26,11 @@ const checkAuth = (req, res, next) => {
     next();
 };
 
-app.use(cookieParser());
-
-// Handlebars
-app.engine('hbs', exphbs.engine)
-app.set('view engine', 'hbs');
-
-app.use(express.static('public'));
-
-// Body Parser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-// Add after body parser initialization!
-app.use(expressValidator());
-
 app.use(checkAuth);
-
 
 //=================================CONTROLLERS=================================\\
 
-require('./controllers/routes')(app);
+app.use(router);
 
 //=================================LISTEN=================================\\
 //To run tests export our app variables that mocha needs in order to successfully run our tests.
