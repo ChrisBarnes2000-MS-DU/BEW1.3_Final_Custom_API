@@ -1,0 +1,11 @@
+<div class="col-xs-12 comment-indent">
+    <p>{{quiz.content}}</p>
+    <a href="/users/:{{this.author.username}}">
+        <p class="text-right">{{quiz.author.username}}</p>
+    </a>
+    <a href="/topics/{{topicId}}/quizzes/{{quiz._id}}/question/new">New Question</a>
+    {{!-- <a href="/posts/{{../post._id}}/comments/{{this._id}}/replies/new">Reply</a> --}}
+    {{#each quiz.comments}}
+        {{> quiz quiz=this topicId=../topicId}}
+    {{/each}}
+</div>

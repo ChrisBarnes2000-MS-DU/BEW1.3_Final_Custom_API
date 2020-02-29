@@ -5,12 +5,12 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-describe("site", function () {
-    it("Should have home page", function (done) {
+describe("Site", () => {
+    it("Should have home page", (done) => {
         chai
             .request(server)
             .get("/")
-            .end(function (err, res) {
+            .end((err, res) => {
                 if (err) {
                     return done(err);
                 }
@@ -19,11 +19,11 @@ describe("site", function () {
             });
     });
 
-    it("Should have about page", function (done) {
+    it("Should have about page", (done) => {
         chai
             .request(server)
-            .get("/")
-            .end(function (err, res) {
+            .get("/about")
+            .end((err, res) => {
                 if (err) {
                     return done(err);
                 }

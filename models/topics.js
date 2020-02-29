@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Populate = require("../utils/autopopulate");
 
-const QuizSchema = new Schema({
+const TopicSchema = new Schema({
     createdAt: { type: Date },
     updatedAt: { type: Date },
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -10,17 +10,16 @@ const QuizSchema = new Schema({
     url: { type: String, required: true },
 
     title: { type: String, required: true },
-    summary: { type: String, required: true },
-    questions: [{type: Schema.Types.ObjectId, ref: 'Question' }],
-
+    // summary: { type: String, required: true },
+    quizzes: [{type: Schema.Types.ObjectId, ref: 'Quizzes' }],
 })
 
 // Always populate the author field
-QuizSchema
+TopicSchema
     .pre('findOne', Populate('author'))
     .pre('find', Populate('author'))
 
-QuizSchema.pre("save", (next) => {
+TopicSchema.pre("save", (next) => {
     // SET createdAt AND updatedAt
     const now = new Date();
     this.updatedAt = now;
@@ -32,4 +31,4 @@ QuizSchema.pre("save", (next) => {
     next();
 });
 
-module.exports = mongoose.model('Quiz', QuizSchema);
+module.exports = mongoose.model('Topic', TopicSchema);
