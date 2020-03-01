@@ -16,10 +16,10 @@ require('./data/quiz-api-db');
 app.use(cookieParser());
 
 const checkAuth = (req, res, next) => {
-    if (typeof req.cookies.nToken === "undefined" || req.cookies.nToken === null) {
+    if (typeof req.cookies.jwtToken === "undefined" || req.cookies.jwtToken === null) {
         req.user = null;
     } else {
-        const token = req.cookies.nToken;
+        const token = req.cookies.jwtToken;
         const decodedToken = jwt.decode(token, { complete: true }) || {};
         req.user = decodedToken.payload;
     }

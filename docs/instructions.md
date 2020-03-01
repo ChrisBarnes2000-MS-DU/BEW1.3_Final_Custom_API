@@ -4,9 +4,18 @@ When working with this API developers shall have the ability to `CREATE`, `READ`
 
 This will allow their users to the endpoints: `GET` & `POST` and the developers to `PUT` & `DELETE`.
 
-This will be stored as nested routes, as topic/:title/quiz/:name/question/:id
-    
-    i.e topic/:Cities/quiz/:San-Francisco/question/:1-10
+This form will send its data to a path that resolves to the /quizzes/create action. The path for this link will follow the standard nested RESTful convention 
+```
+/<<PARENT RESOURCE PLURAL>>/<<PARENT TITLE>>/<<MIDDLE RESOURCE PLURAL>>/<<MIDDLE NAME>>/<<CHILD PLURAL>>/<<CHILD ID>>
+i.e topics/:Cities/quizzes/:San-Francisco/questions/:1-10
+```
+
+
+
+
+
+
+
 
 
 
@@ -30,6 +39,13 @@ Send a request to `/about` to get the following response:
 
 
 
+
+
+
+
+
+
+
 # Topic Endpoints
 
 ## Get All Topics
@@ -39,12 +55,12 @@ Send a GET request to `/topics/` to get a list of all topics. The data should lo
 ```json
 [
   {
-    _id: 1,
+    _id: 5e5ae438df263c3123996d59,
     title: 'Cities',
     quizzes: [],
   }
   {
-    _id: 2,
+    _id: ,
     title: 'Board-Games',
     quizzes: [],
   }
@@ -53,11 +69,11 @@ Send a GET request to `/topics/` to get a list of all topics. The data should lo
 
 ## Get a Single topic
 
-Send a GET request to `/topics/ID_GOES_HERE` to get the details of a specific topic. The data should look like:
+Send a GET request to `/topics/:title` to get the details of a specific topic. The data should look like:
 
 ```json
 {
-    _id: 1
+    _id: 5e5ae438df263c3123996d59,
     title: 'Cities',
     quizzes: [],
 }
@@ -65,7 +81,7 @@ Send a GET request to `/topics/ID_GOES_HERE` to get the details of a specific to
 
 ## Create a New Topic
 
-Send a POST request to `/topics/` with the following information:
+Send a POST request to `/topics/new` with the following information:
 
 ```
 title: string,
@@ -81,7 +97,14 @@ title: string,
 
 ## Delete a Topic
 
-Send a DELETE request to `/topics/ID_GOES_HERE`
+Send a DELETE request to `/topics/:title`
+
+
+
+
+
+
+
 
 
 
@@ -94,12 +117,12 @@ Send a GET request to `/quizzes/` to get a list of all quizzes. The data should 
 ```json
 [
   {
-    _id: 1,
+    _id: 5e5b0205410f30432c22e257,
     name: 'San-Francisco',
     questions: ['How Many Boroughs Does SF Have?', 'What State is SF in?'],
   }
   {
-    _id: 2,
+    _id: ,
     name: 'Monopoly',
     questions: [],
   }
@@ -108,11 +131,11 @@ Send a GET request to `/quizzes/` to get a list of all quizzes. The data should 
 
 ## Get a Single Quiz
 
-Send a GET request to `/quizzes/ID_GOES_HERE` to get the details of a specific quiz. The data should look like:
+Send a GET request to `/quizzes/:name` to get the details of a specific quiz. The data should look like:
 
 ```json
 {
-    _id: 1
+    _id: 5e5b0205410f30432c22e257,
     name: 'San-Francisco',
     questions: ['How Many Boroughs Does SF Have?', 'What State is SF in?'],
 }
@@ -120,7 +143,7 @@ Send a GET request to `/quizzes/ID_GOES_HERE` to get the details of a specific q
 
 ## Create a New Quiz
 
-Send a POST request to `/quizzes/` with the following information:
+Send a POST request to `/quizzes/new` with the following information:
 
 ```
 name: string,
@@ -128,7 +151,7 @@ name: string,
 
 ## Update a Quiz
 
-Send a PUT request to `/quizzes/` with the following information:
+Send a PUT request to `/quizzes/:name` with the following information:
 
 ```
 name: string,
@@ -136,7 +159,15 @@ name: string,
 
 ## Delete a Quiz
 
-Send a DELETE request to `/quizzes/ID_GOES_HERE`
+Send a DELETE request to `/quizzes/:name`
+
+
+
+
+
+
+
+
 
 
 # Questions Endpoints
@@ -151,18 +182,21 @@ Send a GET request to `/questions/` to get a list of all quizzes. The data shoul
     _id: 1
     question: 'How Many Boroughs Does SF Have?',
     answers: [5, 7, 30, 37],
+    answers_given: [],
     corrects: [37],
   }
   {
     _id: 1
     question: 'What State is SF in?',
     answers: ['Washington', 'California', 'New York'],
+    answers_given: [],
     corrects: ['California'],
   }
   {
     _id: 3,
     title: 'How Many Properties Does The Monopoly Game Have?',
     answers: [2, 4, 22, 28, 40],
+    answers_given: [],
     corrects: [28],
   }
 ]
@@ -177,6 +211,7 @@ Send a GET request to `/questions/ID_GOES_HERE` to get the details of a specific
     _id: 1
     question: 'How Many Boroughs Does SF Have?',
     answers: [5, 7, 30, 37],
+    answers_given: [],
     corrects: [37],
 }
 ```
@@ -193,7 +228,7 @@ corrects: [],
 
 ## Update a Question
 
-Send a PUT request to `/questions/` with the following information:
+Send a PUT request to `/questions/ID_GOES_HERE`` with the following information:
 
 ```
 question: string,

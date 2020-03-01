@@ -5,7 +5,7 @@ const Populate = require("../utils/autopopulate");
 const TopicSchema = new Schema({
     createdAt: { type: Date },
     updatedAt: { type: Date },
-    // author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
 
     // url: { type: String, required: true },
 

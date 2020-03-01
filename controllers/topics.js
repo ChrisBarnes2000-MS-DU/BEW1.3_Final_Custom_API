@@ -24,28 +24,28 @@ router.get('/:title', (req, res) => {
 
 
 // CREATE
-router.post("/new", (req, res) => {
-    // if (req.user) {
-    const topic = new Topic(req.body);
-    // topic.author = req.user._id;
-    topic
-        .save()
-        .then(topic => {
-            // return User.findById(req.user._id);
-            res.json(topic)
-        })
-        // .then(user => {
-        //     // user.topics.unshift(topic);
-        //     // user.save();
-        //     // REDIRECT TO THE NEW POST
-        //     // res.redirect(`/topics/${topic.title}`);
-        // })
-        .catch(err => {
-            console.log(err.message);
-        });
-    // } else {
-    //     return res.status(401); // UNAUTHORIZED
-    // }
+router.post("/", (req, res) => {
+    if (req.user) {
+        const topic = new Topic(req.body);
+        topic.author = req.user._id;
+        topic
+            .save()
+            .then(topic => {
+                return User.findById(req.user._id);
+                // res.json(topic)
+            })
+            .then(user => {
+                user.topics.unshift(topic);
+                user.save();
+                // REDIRECT TO THE NEW POST
+                res.redirect(`/topics/${topic.title}`);
+            })
+            .catch(err => {
+                console.log(err.message);
+            });
+    } else {
+        return res.status(401); // UNAUTHORIZED
+    }
 });
 
 
