@@ -1,5 +1,5 @@
 const express = require('express');
-const User = require('../models/user');
+const Topic = require('../models/topics');
 const Quiz = require('../models/quizzes');
 // const Question = require('../models/questons');
 
@@ -24,7 +24,7 @@ router.get('/:name', (req, res) => {
 
 
 // CREATE A NEW QUESTION
-router.post("/:name/question/new", function (req, res) {
+router.post("/:name/question/new", (req, res) => {
     // INSTANTIATE INSTANCE OF MODEL
     const question = new Question(req.body);
 

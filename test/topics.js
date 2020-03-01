@@ -40,24 +40,24 @@ const user = {
 };
 
 
-describe('Topics', function () {
-    // before(function (done) {
+describe('Topics', () => {
+    // before( (done) => {
     //     agent
     //         .post('auth/sign-up')
     //         .set("content-type", "application/x-www-form-urlencoded")
     //         .send(user)
-    //         .then(function (res) {
+    //         .then( (res) => {
     //             done();
     //         })
-    //         .catch(function (err) {
+    //         .catch( (err) => {
     //             done(err);
     //         });
     // });
 
-//     it('Should create with valid attributes at POST /topics/new', function (done) {
+//     it('Should create with valid attributes at POST /topics/new', (done) => {
 //         // Checks how many topics there are now
 //         Topic.estimatedDocumentCount()
-//             .then(function (initialDocCount) {
+//             .then( (initialDocCount) => {
 //                 agent
 //                     .post("/topics/new")
 //                     // This line fakes a form post,
@@ -65,43 +65,43 @@ describe('Topics', function () {
 //                     .set("content-type", "application/x-www-form-urlencoded")
 //                     // Make a request to create another
 //                     .send(newTopic)
-//                     .then(function (res) {
+//                     .then( (res) => {
 //                         Topic.estimatedDocumentCount()
-//                         .then(function (newDocCount) {
+//                         .then( (newDocCount) => {
 //                                 // Check that the database has one more topic in it
 //                                 // expect(res).to.have.status(200);
 //                                 // Check that the database has one more topic in it
 //                                 expect(newDocCount).to.be.equal(initialDocCount + 1)
 //                                 done();
 //                             })
-//                             .catch(function (err) {
+//                             .catch( (err) => {
 //                                 done(err);
 //                             });
 //                     })
-//                     .catch(function (err) {
+//                     .catch( (err) => {
 //                         done(err);
 //                     });
 //             })
-//             .catch(function (err) {
+//             .catch( (err) => {
 //                 done(err);
 //             });
 //     });
-//     after(function (done) {
+//     after( (done) => {
 //         Topic.findOneAndDelete(newTopic)
-//             .then(function (res) {
+//             .then( (res) => {
 //                 agent.close()
 
 //                 User.findOneAndDelete({
 //                     username: user.username
 //                 })
-//                     .then(function (res) {
+//                     .then( (res) => {
 //                         done()
 //                     })
-//                     .catch(function (err) {
+//                     .catch( (err) => {
 //                         done(err);
 //                     });
 //             })
-//             .catch(function (err) {
+//             .catch( (err) => {
 //                 done(err);
 //             });
 //     });

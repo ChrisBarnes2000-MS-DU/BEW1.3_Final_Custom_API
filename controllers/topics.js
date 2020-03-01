@@ -1,4 +1,5 @@
 const express = require('express');
+const User = require('../models/user');
 const Quiz = require('../models/quizzes');
 const Topic = require('../models/topics');
 const quizRoutes = require('./quizzes');
@@ -20,8 +21,7 @@ router.post("/new", (req, res) => {
     if (req.user) {
         const topic = new Topic(req.body);
         topic.author = req.user._id;
-        topic
-            .save()
+        topic.save()
             .then(topic => {
                 return User.findById(req.user._id);
             })
@@ -49,32 +49,104 @@ router.get('/:title', (req, res) => {
 })
 
 
-// CREATE A QUIZ
-router.post("/:title/quizzes/new", function (req, res) {
-    // INSTANTIATE INSTANCE OF MODEL
-    const quiz = new Quiz(req.body);
+// // UPDATE SPECIFIC TOPIC
+// router.put("/:title", (req, res) => {
+//     if (req.user) {
+//         Topic.findOne({ title: req.params.title }).exec( (err, topic) => {
+//             // topic.push(req.user._id);
+//             topic.title = req.body;
+//             topic.save();
+//             res.json(topic);
+//             // res.status(200);
+//         }).catch (err => {
+//             console.log(err.message);
+//             });
+//     } else {
+//         return res.status(401); // UNAUTHORIZED
+//     }
+// });
 
-    // SAVE INSTANCE OF Quiz MODEL TO DB
-    quiz
-        .save()
-        .then(topic => {
-            return Topic.findOne({ title: req.params.title });
-        })
-        .then(topic => {
-            topic.quizzes.unshift(quiz);
-            return topic.save();
-        })
-        .then(topic => {
-            res.json(quiz);
-            // res.redirect(`/`);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+
+// DELETE SPECIFIC TOPIC
+router.delete("/:title", (req, res) => {
+    if (req.user) {
+        topic = Topic.findOneAndDelete({ title: req.params.title })
+            .then(user => {
+                return User.findById(req.user._id);
+            })
+            .then(author => {
+                author.topics.pop(topic);
+                res.json(author);
+                // res.redirect(`/`);
+                return author.save();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    } else {
+        return res.status(401); // UNAUTHORIZED
+    }
 });
 
 
-// QUIZ ROUTES
+
+
+
+//------------ QUIZ ROUTES ------------\\
 router.use('/:title/quizzes', quizRoutes);
+
+
+
+// CREATE A QUIZ
+router.post("/:title/quizzes/new", (req, res) => {
+    if (req.user) {
+        // INSTANTIATE INSTANCE OF MODEL
+        const quiz = new Quiz(req.body);
+
+        // SAVE INSTANCE OF Quiz MODEL TO DB
+        quiz.save()
+            .then(topic => {
+                return Topic.findOne({ title: req.params.title });
+            })
+            .then(topic => {
+                topic.quizzes.unshift(quiz);
+                return topic.save();
+            })
+            .then(topic => {
+                res.json(quiz);
+                // res.redirect(`/`);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    } else {
+        return res.status(401); // UNAUTHORIZED
+    }
+});
+
+
+// DELETE SPECIFIC QUIZ
+router.delete("/:title/quizzes/:name", (req, res) => {
+    if (req.user) {
+        // Delete INSTANCE OF Quiz MODEL TO DB
+        quiz = Quiz.findOneAndDelete({ name: req.params.name })
+            .then(topic => {
+                return Topic.findOne({ title: req.params.title });
+            })
+            .then(topic => {
+                topic.quizzes.pop(quiz);
+                res.json(topic);
+                // res.redirect(`/`);
+                return topic.save();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    } else {
+        return res.status(401); // UNAUTHORIZED
+    }
+
+});
+
 
 module.exports = router;
