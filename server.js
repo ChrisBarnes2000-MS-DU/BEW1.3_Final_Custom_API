@@ -9,7 +9,7 @@ const app = require('./config/express');
 const router = require('./controllers/routes');
 
 // Set db
-require('./data/quiz-db');
+require('./data/quiz-api-db');
 
 //=================================MIDDLEWARE=================================\\
 

@@ -1,5 +1,5 @@
 const express = require('express');
-const quizRoutes = require('./quizzes');
+const topicRoutes = require('./topics');
 const authRoutes = require('./auth');
 
 const router = express.Router();
@@ -17,7 +17,7 @@ router.get('/about', (req, res) => {
 // AUTHENTICATION ROUTES
 router.use('/auth', authRoutes);
 
-// QUIZ ROUTES
-router.use('/quiz', quizRoutes);
+// TOPIC ROUTES
+router.use('/topics', topicRoutes);
 
 module.exports = router;
