@@ -2,34 +2,34 @@
 
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
-        {{#if posts}}
+        {{#if topics}}
             <ul>
-                {{#each posts}}
+                {{#each topics}}
                     <li class="list-group-item">
                         <div class="lead">
-                            <a href="/posts/{{this._id}}">{{this.title}}</a>
+                            <a href="/topics/{{this.title}}">{{this.title}}</a>
                         </div>
-                        <a href="{{this.url}}" target="_blank">{{this.url}}</a>
+                        {{!-- <a href="{{this.url}}" target="_blank">{{this.url}}</a> --}}
                         <div><small>
                             <a href="/users/:{{this.author.username}}">{{this.author.username}}</a>
                         </small></div>
-                        <div class="text-right">
+                        {{!-- <div class="text-right">
                             <a href="/n/{{this.subreddit}}">{{this.subreddit}}</a>
-                        </div>
+                        </div> --}}
 
-                        <form class="vote-up" data-id="{{this._id}}">
+                        {{!-- <form class="vote-up" data-id="{{this._id}}">
                             <button type="submit">Vote Up</button>
                         </form>
                         |
                         <form class="vote-down" data-id="{{this._id}}">
                             <button type="submit">Vote Down</button>
-                        </form>
+                        </form> --}}
 
                     </li>
                 {{/each}}
             </ul>
         {{else }}
-            <h1 style="text-align: center; color:red">No Posts Found</h1>
+            <h1 style="text-align: center; color:red">No Topics Found</h1>
         {{/if }}
     </div>
 </div>

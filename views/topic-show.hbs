@@ -1,27 +1,27 @@
 <div class="row mt-5">
     <div class="col-sm-6 col-sm-offset-3">
-        {{!-- {{post._id}} --}}
-        {{!-- <small class="text-muted">Created on {{post.createdAt}} Last updated {{post.updatedAt}}</small> --}}
-        <h1 class="lead">{{post.title}}</h1>
-        <p><a href="{{post.url}}">{{post.url}}</a></p>
-        <a href="/users/:{{post.author.username}}">
-            <p>{{post.author.username}}</p>
+        {{!-- {{topic._id}} --}}
+        {{!-- <small class="text-muted">Created on {{topic.createdAt}} Last updated {{topic.updatedAt}}</small> --}}
+        <h1 class="lead">{{topic.title}}</h1>
+        <p><a href="{{topic.url}}">{{topic.url}}</a></p>
+        <a href="/users/:{{topic.author.username}}">
+            <p>{{topic.author.username}}</p>
         </a>
-        <p>{{post.summary}}</p>
+        {{!-- <p>{{topic.summary}}</p> --}}
     </div>
 </div>
 
 <div class="row">
-    <form action="/posts/{{post._id}}/comments" method="post">
-        <textarea class='form-control' name="content" placeholder="Comment"></textarea>
+    <form action="/topics/{{topic.title}}/quizzes" method="post">
+        <textarea class='form-control' name="content" placeholder="Quizzes"></textarea>
         <div class="text-right">
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
     </form>
 </div>
 
-{{#each post.comments}}
+{{#each topic.quizzes}}
     <div class="row">
-        {{> comment comment=this postId=../post._id}}
+        {{> quiz quiz=this topicTitle=../topic.title}}
     </div>
 {{/each}}

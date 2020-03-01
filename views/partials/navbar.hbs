@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Redit.js Tutorial</a>
+        <a class="navbar-brand" href="/">Custom API For Quizzes</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
             aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -10,7 +10,7 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     {{#if currentUser}}
-                        <a href="/posts/new" class="btn btn-primary navbar-btn">New Post</a>
+                        <a href="/topics/new" class="btn btn-primary navbar-btn">New Topic</a>
                     {{/if}}
                 </li>
             </ul>
@@ -22,10 +22,10 @@
 
         <ul class="nav navbar-nav navbar-right">
             {{#if currentUser}}
-                <li><a href="/logout"><button>Logout</button></a></li>
+                <li><a href="/auth/logout"><button>Logout</button></a></li>
             {{else}}
-                <li><a href="/login"><button>Login</button></a></li>
-                <li><a href="/sign-up"><button>Sign Up</button></a></li>
+                <li><a href="/auth/login"><button>Login</button></a></li>
+                <li><a href="/auth/sign-up"><button>Sign Up</button></a></li>
             {{/if}}
         </ul>
     </div>

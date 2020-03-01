@@ -8,11 +8,13 @@ const router = express.Router(); // eslint-disable-line new-cap
 //     res.send("You're seeing the authentication routes");
 // });
 
+
 // // SIGN UP FORM
 // router.get("/sign-up", (req, res) => {
 //     res.send("You're seeing the sign up");
 //     // res.render("sign-up");
 // });
+
 
 // SIGN UP
 router.post('/sign-up', (req, res) => {
@@ -28,10 +30,12 @@ router.post('/sign-up', (req, res) => {
     });
 })
 
+
 // // LOGIN FORM
 // router.get('/login', (req, res) => {
 //     res.render('login');
 // });
+
 
 // LOGIN
 router.post('/login', (req, res) => {
@@ -66,10 +70,11 @@ router.post('/login', (req, res) => {
         });
 })
 
+
 // LOGOUT
 router.get('/logout', (req, res) => {
     res.clearCookie('jwttoken');
-    res.json({ 'jwttoken': token, 'user': user })
+    res.send('You logged out')
     // res.redirect('/');
 });
 

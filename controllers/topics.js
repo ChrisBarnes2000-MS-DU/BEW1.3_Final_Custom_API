@@ -15,16 +15,8 @@ router.get('/', (req, res) => {
 });
 
 
-// GET specific topic
-router.get('/:title', (req, res) => {
-    Topic.findOne({ title: req.params.title }).then(result => {
-        res.json(result);
-    })
-})
-
-
-// CREATE
-router.post("/", (req, res) => {
+// CREATE A TOPIC
+router.post("/new", (req, res) => {
     if (req.user) {
         const topic = new Topic(req.body);
         topic.author = req.user._id;
@@ -32,13 +24,13 @@ router.post("/", (req, res) => {
             .save()
             .then(topic => {
                 return User.findById(req.user._id);
-                // res.json(topic)
             })
             .then(user => {
                 user.topics.unshift(topic);
                 user.save();
                 // REDIRECT TO THE NEW POST
-                res.redirect(`/topics/${topic.title}`);
+                res.json(topic)
+                // res.redirect(`/topics/${topic.title}`);
             })
             .catch(err => {
                 console.log(err.message);
@@ -49,7 +41,15 @@ router.post("/", (req, res) => {
 });
 
 
-// CREATE Quiz
+// GET SPECIFIC TOPIC
+router.get('/:title', (req, res) => {
+    Topic.findOne({ title: req.params.title }).then(result => {
+        res.json(result);
+    })
+})
+
+
+// CREATE A QUIZ
 router.post("/:title/quizzes/new", function (req, res) {
     // INSTANTIATE INSTANCE OF MODEL
     const quiz = new Quiz(req.body);
@@ -65,7 +65,7 @@ router.post("/:title/quizzes/new", function (req, res) {
             return topic.save();
         })
         .then(topic => {
-            res.json(topic);
+            res.json(quiz);
             // res.redirect(`/`);
         })
         .catch(err => {
