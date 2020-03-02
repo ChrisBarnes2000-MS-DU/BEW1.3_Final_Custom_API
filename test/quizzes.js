@@ -1,7 +1,8 @@
 // test/Topics.js
-const server = require("./../server");
+const server = require("../server");
 const User = require('../models/user')
 const Topic = require('../models/topics');
+const Quiz = require('../models/quizzes');
 const mongoose = require('mongoose');
 const chaiHttp = require("chai-http");
 const chai = require('chai');
@@ -30,41 +31,61 @@ after((done) => {
 
 
 // Topic that we'll use for testing purposes
-const initTopic = {
-    title: 'Test-Topic-Init',
+const newTopic = {
+    title: 'Test-Topic',
     // summary: 'topic summary',
 };
 
 
-const newTopic = {
-    title: 'Test-Topic-New',
+const initQuiz = {
+    name: 'Test-Quiz-Init',
+    // summary: 'topic summary',
+};
+
+
+const newQuiz = {
+    name: 'Test-Quiz-New',
     // summary: 'topic summary',
 };
 
 
 const sampleUser = {
-    username: 'topicstest',
-    password: 'testtopic',
+    username: 'quizzestest',
+    password: 'testquizzes',
 };
 
 
-describe('Topics', () => {
-    it('re sign up', (done) => {
+describe('Quizzes', () => {
+    it('Re sign up', (done) => {
         agent.post('/auth/sign-up')
             .send(sampleUser)
             .then(res => {
                 assert.equal(res.status, 200)
                 assert.exists(res.body.jwtToken)
-                User.find({ username: 'topicstest' }).then(result => {
-                    assert.equal(result.length, 1)
-                })
+                // User.find({ username: 'quizzestest' }).then(result => {
+                //     assert.equal(result.length, 1)
+                // })
                 return done()
             }).catch(err => {return done(err)});
     })
 
 
+    it("Re Create a Topic", (done) => {
+        agent.post("/topics/new")
+            // This line fakes a form post,
+            // since we're not actually filling out a form
+            .set("content-type", "application/x-www-form-urlencoded")
+            // Make a request to create another
+            .send(newTopic)
+            .then((res) => {
+                expect(res).to.have.status(200)
+                done();
+            }).catch((err) => { done(err) });
+    });
+
+
     it("Should have list page in json", (done) => {
-        agent.get("/topics")
+        agent.get("/topics/Test-Topic/quizzes")
             .end((err, res) => {
                 if (err) {return done(err)};
                 res.status.should.be.equal(200);
@@ -96,8 +117,8 @@ describe('Topics', () => {
     });
 
 
-    it("Should have Details about a Topic in json", (done) => {
-        agent.get("/topics/Test-Topic-Init")
+    it("Should have Details about a Quiz in json", (done) => {
+        agent.get("/topics/Test-Topic/quizzes/Test-Quiz-New")
             .end((err, res) => {
                 if (err) {return done(err)};
                 res.status.should.be.equal(200);
@@ -106,34 +127,35 @@ describe('Topics', () => {
     });
 
 
-    it("Should be able to Update a Topic", (done) => {
-        agent.put("/topics/Test-Topic-Init")
-        .send(newTopic)
-            .end((err, res) => {
-                if (err) {return done(err)};
-                res.body.title.should.be.equal("Test-Topic-New");
-                res.status.should.be.equal(200);
-                return done();
-            });
-    });
+    // it("Should be able to Update a Topic", (done) => {
+    //     agent.put("/topics/Test-Topic-Init")
+    //     .send(newTopic)
+    //         .end((err, res) => {
+    //             if (err) {return done(err)};
+    //             res.body.title.should.be.equal("Test-Topic-New");
+    //             res.status.should.be.equal(200);
+    //             return done();
+    //         });
+    // });
 
 
-    it("Should be able to Delete a Topic", (done) => {
-        agent.delete("/topics/Test-Topic-New")
-            .end((err, res) => {
-                if (err) {return done(err)};
-                res.status.should.be.equal(200);
-                return done();
-            });
-    });
+    // it("Should be able to Delete a Topic", (done) => {
+    //     agent.delete("/topics/Test-Topic-New")
+    //         .end((err, res) => {
+    //             if (err) {return done(err)};
+    //             res.status.should.be.equal(200);
+    //             return done();
+    //         });
+    // });
 
 
     after( (done) => {
-        User.findOneAndRemove({ username: 'topicstest' })
+        User.findOneAndRemove({ username: 'quizzestest' })
             .then(() => done())
-            .catch((err) => {done(err)});
+        Topic.findOneAndDelete(newTopic)
+        .catch((err) => { done(err) });
         agent.close()
-    })
+    });
 
 
 });
