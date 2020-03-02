@@ -6,15 +6,16 @@ const mongoose = require('mongoose');
 const chaiHttp = require("chai-http");
 const chai = require('chai');
 
-const should = chai.should();
 const assert = chai.assert;
 const expect = chai.expect;
 
 chai.config.includeStack = true;
 chai.use(chaiHttp);
 
+
 // Agent that will keep track of our cookies
 const agent = chai.request.agent(server);
+
 
 /**
  * root level hooks
@@ -34,10 +35,12 @@ const initTopic = {
     // summary: 'topic summary',
 };
 
+
 const newTopic = {
     title: 'Test-Topic-New',
     // summary: 'topic summary',
 };
+
 
 const sampleUser = {
     username: 'topicstest',
@@ -56,18 +59,14 @@ describe('Topics', () => {
                     assert.equal(result.length, 1)
                 })
                 return done()
-            }).catch(err => {
-                return done(err)
-            })
+            }).catch(err => {return done(err)});
     })
 
 
     it("Should have list page in json", (done) => {
         agent.get("/topics")
             .end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
+                if (err) {return done(err)};
                 res.status.should.be.equal(200);
                 return done();
             });
@@ -85,30 +84,22 @@ describe('Topics', () => {
                 .send(initTopic)
                 .then( (res) => {
                     Topic.estimatedDocumentCount()
-                     .then( (newCount) => {
+                    .then( (newCount) => {
                         // Check that the database has one more topic in it
                         expect(res).to.have.status(200)
                         // Check that the database has one more topic in it
                         expect(newCount).to.be.equal(initialCount + 1)
                         done();
-                    }).catch( (err) => {
-                        done(err);
-                    });
-                }).catch((err) => {
-                    done(err);
-                });
-        }).catch( (err) => {
-            done(err);
-        });
+                    }).catch( (err) => {done(err)});
+                }).catch((err) => {done(err)});
+        }).catch( (err) => {done(err)});
     });
 
 
     it("Should have Details about a Topic in json", (done) => {
-        agent.get("/topics/Test-Topic-New")
+        agent.get("/topics/Test-Topic-Init")
             .end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
+                if (err) {return done(err)};
                 res.status.should.be.equal(200);
                 return done();
             });
@@ -116,13 +107,11 @@ describe('Topics', () => {
 
 
     it("Should be able to Update a Topic", (done) => {
-        agent.put("/topics/Test-Topic-New")
+        agent.put("/topics/Test-Topic-Init")
         .send(newTopic)
-        // .send({ title: 'Test-Topic-New' })
             .end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
+                if (err) {return done(err)};
+                res.body.title.should.be.equal("Test-Topic-New");
                 res.status.should.be.equal(200);
                 return done();
             });
@@ -132,9 +121,7 @@ describe('Topics', () => {
     it("Should be able to Delete a Topic", (done) => {
         agent.delete("/topics/Test-Topic-New")
             .end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
+                if (err) {return done(err)};
                 res.status.should.be.equal(200);
                 return done();
             });
@@ -144,11 +131,10 @@ describe('Topics', () => {
     after( (done) => {
         User.findOneAndRemove({ username: 'topicstest' })
             .then(() => done())
-            .catch((err) => {
-                done(err);
-            });
+            .catch((err) => {done(err)});
         agent.close()
     })
+
 
 });
 
