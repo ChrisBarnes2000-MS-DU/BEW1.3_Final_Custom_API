@@ -2,7 +2,6 @@
 require('dotenv').config();
 
 const PORT = process.env.PORT;
-const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
 const app = require('./config/express');
@@ -15,19 +14,9 @@ require('./data/quiz-api-db');
 
 app.use(cookieParser());
 
-const checkAuth = (req, res, next) => {
-    console.log("Checking authentication")
-    if (typeof req.cookies.jwtToken === "undefined" || req.cookies.jwtToken === null) {
-        req.user = null;
-    } else {
-        const token = req.cookies.jwtToken;
-        const decodedToken = jwt.decode(token, { complete: true }) || {};
-        req.user = decodedToken.payload;
-    }
-    next();
-};
+const checkAuth = require('./utils/checkAuth');
 
-app.use(checkAuth);
+app.use(checkAuth());
 
 //=================================CONTROLLERS=================================\\
 

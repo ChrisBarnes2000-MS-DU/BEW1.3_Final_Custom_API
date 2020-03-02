@@ -73,7 +73,7 @@ describe('Auth', () => {
             .send(sampleUser)
             .then(res => {
                 assert.equal(res.status, 200)
-                assert.exists(res.body.jwttoken)
+                assert.exists(res.body.jwtToken)
 
                 User.find({ username: 'testuser' }).then(result => {
                     assert.equal(result.length, 1)
@@ -93,7 +93,7 @@ describe('Auth', () => {
                 .then(res => {
                     // console.log(res.body)
                     assert.equal(res.status, 200)
-                    assert.exists(res.body.jwttoken)
+                    assert.exists(res.body.jwtToken)
                     return done()
                 }).catch(err => {
                     console.log(err)

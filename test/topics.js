@@ -29,87 +29,126 @@ after((done) => {
 
 
 // Topic that we'll use for testing purposes
-const newTopic = {
-    title: 'topic title',
+const initTopic = {
+    title: 'Test-Topic-Init',
     // summary: 'topic summary',
 };
 
-const user = {
+const newTopic = {
+    title: 'Test-Topic-New',
+    // summary: 'topic summary',
+};
+
+const sampleUser = {
     username: 'topicstest',
     password: 'testposts',
 };
 
 
 describe('Topics', () => {
-    // before( (done) => {
-    //     agent
-    //         .post('auth/sign-up')
-    //         .set("content-type", "application/x-www-form-urlencoded")
-    //         .send(user)
-    //         .then( (res) => {
-    //             done();
-    //         })
-    //         .catch( (err) => {
-    //             done(err);
-    //         });
-    // });
-
-//     it('Should create with valid attributes at POST /topics/new', (done) => {
-//         // Checks how many topics there are now
-//         Topic.estimatedDocumentCount()
-//             .then( (initialDocCount) => {
-//                 agent
-//                     .post("/topics/new")
-//                     // This line fakes a form post,
-//                     // since we're not actually filling out a form
-//                     .set("content-type", "application/x-www-form-urlencoded")
-//                     // Make a request to create another
-//                     .send(newTopic)
-//                     .then( (res) => {
-//                         Topic.estimatedDocumentCount()
-//                         .then( (newDocCount) => {
-//                                 // Check that the database has one more topic in it
-//                                 // expect(res).to.have.status(200);
-//                                 // Check that the database has one more topic in it
-//                                 expect(newDocCount).to.be.equal(initialDocCount + 1)
-//                                 done();
-//                             })
-//                             .catch( (err) => {
-//                                 done(err);
-//                             });
-//                     })
-//                     .catch( (err) => {
-//                         done(err);
-//                     });
-//             })
-//             .catch( (err) => {
-//                 done(err);
-//             });
-//     });
-//     after( (done) => {
-//         Topic.findOneAndDelete(newTopic)
-//             .then( (res) => {
-//                 agent.close()
-
-//                 User.findOneAndDelete({
-//                     username: user.username
-//                 })
-//                     .then( (res) => {
-//                         done()
-//                     })
-//                     .catch( (err) => {
-//                         done(err);
-//                     });
-//             })
-//             .catch( (err) => {
-//                 done(err);
-//             });
-//     });
-}); 
+    it('should be able to sign up', (done) => {
+        agent.post('/auth/sign-up')
+            .send(sampleUser)
+            .then(res => {
+                assert.equal(res.status, 200)
+                assert.exists(res.body.jwtToken)
+                User.find({ username: 'topicstest' }).then(result => {
+                    assert.equal(result.length, 1)
+                })
+                return done()
+            }).catch(err => {
+                return done(err)
+            })
+    })
 
 
-// How many topics are there now?
-// Make a request to create another
-// Check that the database has one more topic in it
-// Check that the response is successful
+    it("Should have list page in json", (done) => {
+        agent.get("/topics")
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                res.status.should.be.equal(200);
+                return done();
+            });
+    });
+
+
+    it("Should be able to Create a new Topic", (done) => {
+        // Checks how many topics there are now
+        Topic.estimatedDocumentCount().then( (initialCount) => {
+            agent.post("/topics/new")
+                // This line fakes a form post,
+                // since we're not actually filling out a form
+                .set("content-type", "application/x-www-form-urlencoded")
+                // Make a request to create another
+                .send(initTopic)
+                .then( (res) => {
+                    Topic.estimatedDocumentCount()
+                     .then( (newCount) => {
+                        // Check that the database has one more topic in it
+                        expect(res).to.have.status(200)
+                        // Check that the database has one more topic in it
+                        expect(newCount).to.be.equal(initialCount + 1)
+                        done();
+                    }).catch( (err) => {
+                        done(err);
+                    });
+                }).catch((err) => {
+                    done(err);
+                });
+        }).catch( (err) => {
+            done(err);
+        });
+    });
+
+
+    it("Should have Details about a Topic in json", (done) => {
+        agent.get("/topics/Test-Topic-New")
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                res.status.should.be.equal(200);
+                return done();
+            });
+    });
+
+
+    it("Should be able to Update a Topic", (done) => {
+        agent.put("/topics/Test-Topic-New")
+        .send(newTopic)
+        // .send({ title: 'Test-Topic-New' })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                res.status.should.be.equal(200);
+                return done();
+            });
+    });
+
+
+    it("Should be able to Delete a Topic", (done) => {
+        agent.delete("/topics/Test-Topic-New")
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                res.status.should.be.equal(200);
+                return done();
+            });
+    });
+
+
+    after( (done) => {
+        User.findOneAndRemove({ username: 'topicstest' })
+            .then(() => done())
+            .catch((err) => {
+                done(err);
+            });
+        agent.close()
+    })
+
+});
 
