@@ -16,6 +16,7 @@ require('./data/quiz-api-db');
 app.use(cookieParser());
 
 const checkAuth = (req, res, next) => {
+    console.log("Checking authentication")
     if (typeof req.cookies.jwtToken === "undefined" || req.cookies.jwtToken === null) {
         req.user = null;
     } else {

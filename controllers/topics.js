@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
-const Quiz = require('../models/quizzes');
 const Topic = require('../models/topics');
+const Quiz = require('../models/quizzes');
 const quizRoutes = require('./quizzes');
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -49,22 +49,27 @@ router.get('/:title', (req, res) => {
 })
 
 
-// // UPDATE SPECIFIC TOPIC
-// router.put("/:title", (req, res) => {
-//     if (req.user) {
-//         Topic.findOne({ title: req.params.title }).exec( (err, topic) => {
-//             // topic.push(req.user._id);
-//             topic.title = req.body;
-//             topic.save();
-//             res.json(topic);
-//             // res.status(200);
-//         }).catch (err => {
-//             console.log(err.message);
-//             });
-//     } else {
-//         return res.status(401); // UNAUTHORIZED
-//     }
-// });
+// UPDATE SPECIFIC TOPIC
+router.put("/:title", (req, res) => {
+    if (req.user) {
+        Topic.findOneAndUpdate({ title: req.params.title }).then(topic => {
+            topic.title = req.body.title;
+            topic.save();
+            res.json(topic);
+            // res.status(200);
+        }).then(author => {
+            author.topics.pop(topic);
+            author.topics.unshift(topic);
+            res.json((Topic, author));
+            // res.redirect(`/`);
+            return author.save();
+        }).catch (err => {
+            console.log(err.message);
+            });
+    } else {
+        return res.status(401); // UNAUTHORIZED
+    }
+});
 
 
 // DELETE SPECIFIC TOPIC

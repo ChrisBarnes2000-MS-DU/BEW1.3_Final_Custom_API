@@ -22,7 +22,7 @@ router.post('/sign-up', (req, res) => {
     user.save().then(user => {
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: "60 days" });
         res.cookie('jwtToken', token, { maxAge: 900000, httpOnly: true });
-        res.json({ 'jwttoken': token, 'user': user })
+        res.json({ 'jwtToken': token, 'user': user })
         // res.redirect('/');
     }).catch(err => {
         console.log(err.message);
@@ -61,7 +61,7 @@ router.post('/login', (req, res) => {
                 });
                 // Set a cookie and redirect to root
                 res.cookie("jwtToken", token, { maxAge: 900000, httpOnly: true });
-                res.json({ 'jwttoken': token, 'user': user })
+                res.json({ 'jwtToken': token, 'user': user })
                 // res.redirect("/");
             });
         })
@@ -73,7 +73,7 @@ router.post('/login', (req, res) => {
 
 // LOGOUT
 router.get('/logout', (req, res) => {
-    res.clearCookie('jwttoken');
+    res.clearCookie('jwtToken');
     res.send('You logged out')
     // res.redirect('/');
 });
