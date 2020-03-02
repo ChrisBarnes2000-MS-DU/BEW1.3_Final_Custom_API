@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 assert = require("assert");
 
-const url = process.env.MONGO_HOST;
+const url = process.env.MONGO_URI;
 mongoose.Promise = global.Promise;
 mongoose.connect(
     url,
