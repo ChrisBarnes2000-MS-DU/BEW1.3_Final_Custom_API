@@ -57,8 +57,8 @@ const newTopic = {
 
 describe('Topics', () => {
     afterEach((done) => {
-        promise1 = Topic.findOneAndRemove({'title': 'Test-Topic-New'})
-        promise2 = Topic.findOneAndRemove({'title': 'Test-Topic-Init'})
+        promise1 = Topic.findOneAndRemove({'topicID': 'Test-Topic-New'})
+        promise2 = Topic.findOneAndRemove({'topicID': 'Test-Topic-Init'})
         promise3 = User.findOneAndRemove({ username: 'topicstest' })
         Promise.all([promise1, promise2, promise3]).then(() => done())
     });
@@ -74,31 +74,26 @@ describe('Topics', () => {
     });
 
 
-    // it("Should be able to Create a new Topic", (done) => {
-    //     // Checks how many topics there are now
-    //     Topic.estimatedDocumentCount().then((initialCount) => {
-    //         agent.post("/topics/new")
-    //             // This line fakes a form post,
-    //             // since we're not actually filling out a form
-    //             .set("content-type", "application/x-www-form-urlencoded")
-    //             // Make a request to create another
-    //             .send(newTopic)
-    //             .then((res) => {
-    //                 Topic.estimatedDocumentCount()
-    //                     .then((newCount) => {
-    //                         // Check that the database has one more topic in it
-    //                         expect(res).to.have.status(200)
-    //                         // Check that the database has one more topic in it
-    //                         expect(newCount).to.be.equal(initialCount + 1)
-    //                         return done();
-    //                     }).catch((err) => { done(err) });
-    //                 console.log(res)
-    //             }).catch((err) => { done(err) });
-    //     }).catch((err) => { done(err) });
-    // });
-
-
-// }).catch((err) => { done(err) });
+    it("Should be able to Create a new Topic", (done) => {
+        // Checks how many topics there are now
+        Topic.estimatedDocumentCount().then((initialCount) => {
+            agent.post("/topics/new")
+            //     // This line fakes a form post,
+            //     // since we're not actually filling out a form
+                .set("content-type", "application/x-www-form-urlencoded")
+            //     // Make a request to create another
+                .send(newTopic).then(res => {
+                Topic.estimatedDocumentCount().then((newCount) => {
+                        // Check that the database has one more topic in it
+                        expect(res).to.have.status(200)
+                        // Check that the database has one more topic in it
+                        expect(newCount).to.be.equal(initialCount + 1)
+                        return done();
+                    }).catch((err) => { done(err) });
+                })
+                return done()
+        }).catch((err) => { done(err) });
+    });
 
 
     it("Should have Details about a Topic in json", (done) => {
@@ -107,8 +102,6 @@ describe('Topics', () => {
             agent.get("/topics/Test-Topic-Init")
                 .end((err, res) => {
                     if (err) { return done(err) };
-                    expect(res.body.title).to.equal("Test-Topic-Init");
-                    assert.equal(res.body.title, "Test-Topic-Init");
                     res.status.should.be.equal(200);
                     return done()
                 })
@@ -116,37 +109,36 @@ describe('Topics', () => {
     });
 
 
-    // it("Should be able to Update a Topic", (done) => {
-    //     topic = new Topic(initTopic);
-    //     topic.save().then((topic) => {
-    //         console.log("\n\n",topic,"\n\n")
-            
-    //         agent.put("/topics/Test-Topic-Init")
-    //         .send(newTopic)
-    //             .end((err, res) => {
-    //                 if (err) { return done(err) };
-    //                 expect(res.body.title).to.equal("Test-Topic-New");
-    //                 assert.equal(res.body.title, "Test-Topic-New");
-    //                 res.status.should.be.equal(200);
-    //                 return done()
-    //             })
-    //     }).catch((err) => { done(err) });
-    // });
+    it("Should be able to Update a Topic", (done) => {
+        topic = new Topic(initTopic);
+        topic.save().then((topic) => {
+            agent.put("/topics/Test-Topic-Init")
+            .send(newTopic)
+                .end((err, res) => {
+                    if (err) { return done(err) };
+                    expect(res.body.title).to.equal("Test-Topic-New");
+                    assert.equal(res.body.title, "Test-Topic-New");
+                    res.status.should.be.equal(200);
+                    return done()
+                })
+            return done()
+        }).catch((err) => { done(err) });
+    });
 
 
-    // it("Should be able to Delete a Topic", (done) => {
-    //     topic = new Topic(initTopic);
-    //     topic.save()
-    //     agent.delete("/topics/Test-Topic-Init")
-    //         .then((err, res) => {
-    //             if (err) { return done(err) };
-    //             expect(res.body.title).to.equal(undefined);
-    //             assert.equal(res.body.title, undefined);
-    //             res.status.should.be.equal(200);
-    //             return done()
-    //         })
-    //         // console.log("you fucked up", res)
-    // });
+    it("Should be able to Delete a Topic", (done) => {
+        topic = new Topic(initTopic);
+        topic.save()
+        agent.delete("/topics/Test-Topic-Init")
+            .then((err, res) => {
+                if (err) { return done(err) };
+                expect(res.body.title).to.equal(undefined);
+                assert.equal(res.body.title, undefined);
+                res.status.should.be.equal(200);
+                return done()
+            })
+        return done()
+    });
 
 });
 

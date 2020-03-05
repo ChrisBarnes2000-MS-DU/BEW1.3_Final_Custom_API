@@ -26,27 +26,9 @@ after((done) => {
     mongoose.models = {};
     mongoose.modelSchemas = {};
     mongoose.connection.close();
+    agent.close()
     done();
 });
-
-
-// Topic that we'll use for testing purposes
-const newTopic = {
-    title: 'Test-Topic',
-    // summary: 'topic summary',
-};
-
-
-const initQuiz = {
-    name: 'Test-Quiz-Init',
-    // summary: 'topic summary',
-};
-
-
-const newQuiz = {
-    name: 'Test-Quiz-New',
-    // summary: 'topic summary',
-};
 
 
 const sampleUser = {
@@ -55,36 +37,48 @@ const sampleUser = {
 };
 
 
+user = new User(sampleUser)
+user.save()
+
+
+// Topic that we'll use for testing purposes
+const testTopic = {
+    title: 'Test-Topic',
+    // summary: 'topic summary',
+    author: user,
+};
+
+
+const initQuiz = {
+    name: 'Test-Quiz-Init',
+    summary: 'First summary',
+};
+
+
+const newQuiz = {
+    name: 'Test-Quiz-New',
+    summary: 'second summary',
+};
+
+
 describe('Quizzes', () => {
-    it('Re sign up', (done) => {
-        agent.post('/auth/sign-up')
-            .send(sampleUser)
-            .then(res => {
-                assert.equal(res.status, 200)
-                assert.exists(res.body.jwtToken)
-                User.find({ username: 'quizzestest' }).then(result => {
-                    assert.equal(result.length, 1)
-                })
-                return done()
-            }).catch(err => {return done(err)});
+    before((done) => {
+        topic = new Topic(testTopic)
+        topic.save()
+        return done()
+        // topic.save().then((topic) => {
+        // }).catch((err) => { done(err) });
     })
 
 
-    it("Re Create a Topic", (done) => {
-        agent.post("/topics/new")
-            // This line fakes a form post,
-            // since we're not actually filling out a form
-            .set("content-type", "application/x-www-form-urlencoded")
-            // Make a request to create another
-            .send(newTopic)
-            .then((res) => {
-                expect(res).to.have.status(200)
-                done();
-            }).catch((err) => { done(err) });
+    afterEach((done) => {
+        promise1 = Topic.findOneAndRemove({title: 'Test-Topic'})
+        promise2 = User.findOneAndRemove({ username: 'quizzestest' })
+        Promise.all([promise1, promise2]).then(() => done())
     });
 
 
-    it("Should have list page in json", (done) => {
+    it("Should have list page in json for Quizzes", (done) => {
         agent.get("/topics/Test-Topic/quizzes")
             .end((err, res) => {
                 if (err) {return done(err)};
@@ -94,25 +88,24 @@ describe('Quizzes', () => {
     });
 
 
-    it("Should be able to Create a new Topic", (done) => {
+    it("Should be able to Create a new Quiz", (done) => {
         // Checks how many topics there are now
-        Topic.estimatedDocumentCount().then( (initialCount) => {
-            agent.post("/topics/new")
+        Quiz.estimatedDocumentCount().then( (initialCount) => {
+            agent.post("/topics/Test-Topic/quizzes/new")
                 // This line fakes a form post,
                 // since we're not actually filling out a form
                 .set("content-type", "application/x-www-form-urlencoded")
                 // Make a request to create another
-                .send(newTopic)
-                .then( (res) => {
-                    Topic.estimatedDocumentCount()
-                    .then( (newCount) => {
+                .send(initQuiz).then( (res) => {
+                    Quiz.estimatedDocumentCount().then( (newCount) => {
                         // Check that the database has one more topic in it
                         expect(res).to.have.status(200)
                         // Check that the database has one more topic in it
                         expect(newCount).to.be.equal(initialCount + 1)
-                        done();
+                        return done();
                     }).catch( (err) => {done(err)});
                 }).catch((err) => {done(err)});
+            return done()
         }).catch( (err) => {done(err)});
     });
 
@@ -127,36 +120,28 @@ describe('Quizzes', () => {
     });
 
 
-    it("Should be able to Update a Topic", (done) => {
-        agent.put("/topics/Test-Topic-Init")
-        .send(newTopic)
+    it("Should be able to Update a Quiz", (done) => {
+        const quiz = new Quiz(initQuiz)
+        agent.put("/topics/Test-Topic/quizzes/Test-Quiz-Init")
+        .send(newQuiz)
+        .then((res) => {
+            res.body.name.should.be.equal("Test-Quiz-New");
+            res.status.should.be.equal(200);
+            return done()
+        }).catch((err) => { done(err) });
+        return done()
+    });
+
+
+    it("Should be able to Delete a Quiz", (done) => {
+        agent.delete("/topics/Test-Topic/quizzes/Test-Quiz-New")
             .end((err, res) => {
                 if (err) {return done(err)};
-                res.body.title.should.be.equal("Test-Topic");
                 res.status.should.be.equal(200);
                 return done();
             });
+        return done()
     });
-
-
-    it("Should be able to Delete a Topic", (done) => {
-        agent.delete("/topics/Test-Topic-New")
-            .end((err, res) => {
-                if (err) {return done(err)};
-                res.status.should.be.equal(200);
-                return done();
-            });
-    });
-
-
-    after( (done) => {
-        User.findOneAndRemove({ username: 'quizzestest' })
-            .then(() => done())
-        Topic.findOneAndDelete(newTopic)
-        .catch((err) => { done(err) });
-        agent.close()
-    });
-
 
 });
 

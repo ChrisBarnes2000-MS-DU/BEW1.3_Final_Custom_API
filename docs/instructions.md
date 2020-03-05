@@ -6,8 +6,8 @@ This will allow their users to the endpoints: `GET` & `POST` and the developers 
 
 This form will send its data to a path that resolves to the /quizzes/create action. The path for this link will follow the standard nested RESTful convention 
 ```
-/<<PARENT RESOURCE PLURAL>>/<<PARENT TITLE>>/<<MIDDLE RESOURCE PLURAL>>/<<MIDDLE NAME>>/<<CHILD PLURAL>>/<<CHILD ID>>
-i.e topics/:Cities/quizzes/:San-Francisco/questions/:1-10
+/<<PARENT RESOURCE PLURAL>>/<<PARENT ID>>/<<MIDDLE RESOURCE PLURAL>>/<<MIDDLE ID>>/<<CHILD PLURAL>>/<<CHILD ID>>
+i.e topics/:5e61403af2c1742ec0304014/quizzes/:5e61403af2c1742ec0304015/questions/:5e61403af2c1742ec0304016
 ```
 
 
@@ -69,7 +69,7 @@ Send a GET request to `/topics/` to get a list of all topics. The data should lo
 
 ## Get a Single topic
 
-Send a GET request to `/topics/:title` to get the details of a specific topic. The data should look like:
+Send a GET request to `/topics/:id` to get the details of a specific topic. The data should look like:
 
 ```json
 {
@@ -97,7 +97,7 @@ title: string,
 
 ## Delete a Topic
 
-Send a DELETE request to `/topics/:title`
+Send a DELETE request to `/topics/:id`
 
 
 
@@ -131,7 +131,7 @@ Send a GET request to `/quizzes/` to get a list of all quizzes. The data should 
 
 ## Get a Single Quiz
 
-Send a GET request to `/quizzes/:name` to get the details of a specific quiz. The data should look like:
+Send a GET request to `/quizzes/:id` to get the details of a specific quiz. The data should look like:
 
 ```json
 {
@@ -151,7 +151,7 @@ name: string,
 
 ## Update a Quiz
 
-Send a PUT request to `/quizzes/:name` with the following information:
+Send a PUT request to `/quizzes/:id` with the following information:
 
 ```
 name: string,

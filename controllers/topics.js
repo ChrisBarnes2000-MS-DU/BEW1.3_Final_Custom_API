@@ -1,18 +1,26 @@
 const express = require('express');
 const User = require('../models/user');
 const Topic = require('../models/topics');
-const Quiz = require('../models/quizzes');
 const quizRoutes = require('./quizzes');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-// TOPICs INDEX
-router.get('/', (req, res) => {
+// TOPICS INDEX
+router.get('/', (req, res, next) => {
     Topic.find().lean().then(result => {
-        res.json(result);
+        res.json(result)
     }).catch(err => {
         console.log(err.message);
-    });
+    })
+});
+
+
+// GET SPECIFIC TOPIC
+router.get('/:topicID', (req, res, next) => {
+    let mytopicID = req.params.topicID
+    Topic.findOne({ topicID: mytopicID }).then(result => {
+        res.json(result)
+    })
 });
 
 
@@ -23,34 +31,23 @@ router.post("/new", (req, res) => {
         topic.author = req.user._id;
         topic.save().then(() => {
                 return User.findById(req.user._id);
-            })
-            .then(user => {
+            }).then(user => {
                 user.topics.unshift(topic);
                 user.save();
                 // REDIRECT TO THE NEW POST
                 res.json(topic)
-                // res.redirect(`/topics/${topic.title}`);
-            }).catch(err => {
-                console.log(err.message);
-            });
+                // res.redirect(`/topics/${topic.topicID}`);
+            }).catch(err => { console.log(err.message); });
     } else {
         return res.status(401); // UNAUTHORIZED
     }
 });
 
 
-// GET SPECIFIC TOPIC
-router.get('/:title', (req, res) => {
-    Topic.findOne({ title: req.params.title }).then(result => {
-        res.json(result);
-    })
-})
-
-
 // UPDATE SPECIFIC TOPIC
-router.put("/:title", (req, res) => {
+router.put("/:topicID", (req, res) => {
     if (req.user) {
-        Topic.findOneAndUpdate({ title: req.params.title }).then(topic => {
+        Topic.findOneAndUpdate({ topicID: req.params.topicID }).then(topic => {
             topic.title = req.body.title;
             // topic.summary = req.body.summary;
             topic.save();
@@ -72,10 +69,10 @@ router.put("/:title", (req, res) => {
 
 
 // DELETE SPECIFIC TOPIC
-router.delete("/:title", (req, res) => {
+router.delete("/:topicID", (req, res) => {
     if (req.user) {
-        topic = Topic.findOneAndDelete({ title: req.params.title })
-            .then(user => {
+        topic = Topic.findOneAndDelete({ topicID: req.params.topicID })
+            .then(() => {
                 return User.findById(req.user._id);
             })
             .then(author => {
@@ -94,56 +91,11 @@ router.delete("/:title", (req, res) => {
 
 
 
-
-
 //------------ QUIZ ROUTES ------------\\
-router.use('/:title/quizzes', quizRoutes);
-
-
-
-// CREATE A QUIZ
-router.post("/:title/quizzes/new", (req, res) => {
-    if (!req.user) {
-        return res.status(401); // UNAUTHORIZED
-    } else {
-        // INSTANTIATE INSTANCE OF MODEL
-        const quiz = new Quiz(req.body);
-        const topic = Topic.findOne({ title: req.params.title });
-
-        // SAVE INSTANCE OF Quiz MODEL TO DB
-        quiz.save().then(topic => {
-                topic.quizzes.unshift(quiz)
-                topic.save()
-                res.json(quiz)
-                // res.redirect(`/`);
-                return document()
-            }).catch(err => { console.log(err) });
-    }
-});
-
-
-// DELETE SPECIFIC QUIZ
-router.delete("/:title/quizzes/:name", (req, res) => {
-    if (req.user) {
-        // Delete INSTANCE OF Quiz MODEL TO DB
-        quiz = Quiz.findOneAndDelete({ name: req.params.name })
-            .then(topic => {
-                return Topic.findOne({ title: req.params.title });
-            })
-            .then(topic => {
-                topic.quizzes.pop(quiz);
-                res.json(topic);
-                // res.redirect(`/`);
-                return topic.save();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    } else {
-        return res.status(401); // UNAUTHORIZED
-    }
-
-});
+router.use('/:topicID/quizzes', function (req, res, next) {
+    req.topicID = req.params.topicID;
+    next()
+}, quizRoutes);
 
 
 module.exports = router;
