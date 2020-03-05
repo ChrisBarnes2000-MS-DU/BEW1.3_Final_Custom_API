@@ -6,7 +6,7 @@ const url = process.env.MONGODB_URI;
 mongoose.Promise = global.Promise;
 mongoose.connect(
     url,
-    { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true },
+    { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, useUnifiedTopology: true},
     (err, db) => {
         assert.equal(null, err);
         console.log("Connected successfully to database");

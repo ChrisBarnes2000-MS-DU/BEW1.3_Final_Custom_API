@@ -62,9 +62,9 @@ describe('Quizzes', () => {
             .then(res => {
                 assert.equal(res.status, 200)
                 assert.exists(res.body.jwtToken)
-                // User.find({ username: 'quizzestest' }).then(result => {
-                //     assert.equal(result.length, 1)
-                // })
+                User.find({ username: 'quizzestest' }).then(result => {
+                    assert.equal(result.length, 1)
+                })
                 return done()
             }).catch(err => {return done(err)});
     })
@@ -102,7 +102,7 @@ describe('Quizzes', () => {
                 // since we're not actually filling out a form
                 .set("content-type", "application/x-www-form-urlencoded")
                 // Make a request to create another
-                .send(initTopic)
+                .send(newTopic)
                 .then( (res) => {
                     Topic.estimatedDocumentCount()
                     .then( (newCount) => {
@@ -127,26 +127,26 @@ describe('Quizzes', () => {
     });
 
 
-    // it("Should be able to Update a Topic", (done) => {
-    //     agent.put("/topics/Test-Topic-Init")
-    //     .send(newTopic)
-    //         .end((err, res) => {
-    //             if (err) {return done(err)};
-    //             res.body.title.should.be.equal("Test-Topic-New");
-    //             res.status.should.be.equal(200);
-    //             return done();
-    //         });
-    // });
+    it("Should be able to Update a Topic", (done) => {
+        agent.put("/topics/Test-Topic-Init")
+        .send(newTopic)
+            .end((err, res) => {
+                if (err) {return done(err)};
+                res.body.title.should.be.equal("Test-Topic");
+                res.status.should.be.equal(200);
+                return done();
+            });
+    });
 
 
-    // it("Should be able to Delete a Topic", (done) => {
-    //     agent.delete("/topics/Test-Topic-New")
-    //         .end((err, res) => {
-    //             if (err) {return done(err)};
-    //             res.status.should.be.equal(200);
-    //             return done();
-    //         });
-    // });
+    it("Should be able to Delete a Topic", (done) => {
+        agent.delete("/topics/Test-Topic-New")
+            .end((err, res) => {
+                if (err) {return done(err)};
+                res.status.should.be.equal(200);
+                return done();
+            });
+    });
 
 
     after( (done) => {

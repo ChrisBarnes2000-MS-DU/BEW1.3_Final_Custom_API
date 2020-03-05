@@ -21,8 +21,7 @@ router.post("/new", (req, res) => {
     if (req.user) {
         const topic = new Topic(req.body);
         topic.author = req.user._id;
-        topic.save()
-            .then(topic => {
+        topic.save().then(() => {
                 return User.findById(req.user._id);
             })
             .then(user => {
@@ -31,8 +30,7 @@ router.post("/new", (req, res) => {
                 // REDIRECT TO THE NEW POST
                 res.json(topic)
                 // res.redirect(`/topics/${topic.title}`);
-            })
-            .catch(err => {
+            }).catch(err => {
                 console.log(err.message);
             });
     } else {
@@ -54,6 +52,7 @@ router.put("/:title", (req, res) => {
     if (req.user) {
         Topic.findOneAndUpdate({ title: req.params.title }).then(topic => {
             topic.title = req.body.title;
+            // topic.summary = req.body.summary;
             topic.save();
             res.json(topic);
             // res.status(200);
@@ -104,28 +103,21 @@ router.use('/:title/quizzes', quizRoutes);
 
 // CREATE A QUIZ
 router.post("/:title/quizzes/new", (req, res) => {
-    if (req.user) {
+    if (!req.user) {
+        return res.status(401); // UNAUTHORIZED
+    } else {
         // INSTANTIATE INSTANCE OF MODEL
         const quiz = new Quiz(req.body);
+        const topic = Topic.findOne({ title: req.params.title });
 
         // SAVE INSTANCE OF Quiz MODEL TO DB
-        quiz.save()
-            .then(topic => {
-                return Topic.findOne({ title: req.params.title });
-            })
-            .then(topic => {
-                topic.quizzes.unshift(quiz);
-                return topic.save();
-            })
-            .then(topic => {
-                res.json(quiz);
+        quiz.save().then(topic => {
+                topic.quizzes.unshift(quiz)
+                topic.save()
+                res.json(quiz)
                 // res.redirect(`/`);
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    } else {
-        return res.status(401); // UNAUTHORIZED
+                return document()
+            }).catch(err => { console.log(err) });
     }
 });
 

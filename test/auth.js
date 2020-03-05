@@ -35,8 +35,7 @@ describe('Auth', () => {
     });
 
     // it("Should have base auth page", (done) => {
-    //     chai
-    //         .request(server)
+    //     chai.request(server)
     //         .get("/auth")
     //         .end((err, res) => {
     //             if (err) {
@@ -48,8 +47,7 @@ describe('Auth', () => {
     // });
 
     // it("Should have login page", (done) => {
-    //     chai
-    //         .request(server)
+    //     chai.request(server)
     //         .get("/auth/login")
     //         .end((err, res) => {
     //             if (err) {
@@ -60,14 +58,14 @@ describe('Auth', () => {
     //         });
     // });
 
-    it("should not be able to login if they have not registered", (done) => {
+    it("Should not be able to login if they have not registered", (done) => {
         agent.post("/auth/login", { email: "wrong@wrong.com", password: "nope" }).end( (err, res) => {
             res.status.should.be.equal(401);
             done();
         });
     });
 
-    it('should be able to sign up', (done) => {
+    it('Should be able to sign up for Auth', (done) => {
         chai.request(server)
             .post('/auth/sign-up')
             .send(sampleUser)
@@ -84,7 +82,7 @@ describe('Auth', () => {
             })
     })
 
-    it('should be able to log in', (done) => {
+    it('Should be able to log in for Auth', (done) => {
         let user = new User(sampleUser)
         user.save().then(savedUser => {
             chai.request(server)
@@ -103,7 +101,7 @@ describe('Auth', () => {
     })
 
     // logout
-    it("should be able to logout", (done) => {
+    it("Should be able to logout for Auth", (done) => {
         agent.get("/auth/logout").end( (err, res) => {
             // res.should.have.status(200);
             agent.should.not.have.cookie("jwtToken");
