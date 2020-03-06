@@ -18,10 +18,10 @@ Must receive higher than `70%` to pass the project.
 
 | Criteria | Points | Score |
 | -------- | ------ | ----- |
-| `>1` nested route | 10 | |
-| `CREATE`, `READ`, `UPDATE`, and `DELETE` objects | 20 | |
+| `>1` nested route | 10 | 10 |
+| `CREATE`, `READ`, `UPDATE`, and `DELETE` objects | 20 | 20 |
 | Uses a DB | 10 | 10 |
-| Can provision users | 20 | |
+| Can provision users | 20 | 20 |
 | Brochure site | 10 | 10 |
 | Has documentation | 10 | 10 |
 
@@ -40,12 +40,12 @@ Must receive higher than `70%` to pass the project.
 
 | Criteria | Points | Score |
 | -------- | ------ | ----- |
-| RESTful architecture | 10 | |
+| RESTful architecture | 10 | 10|
 | MVC | 10 | 10 |
 | Public GitHub repo | 5 | 5 |
 | No exposed secrets | 5 | 5 |
-| Has purpose / fulfills proposal | 15 | 15 |
-| Deployed and usable | 15 | |
+| Has purpose / fulfills proposal | 15 | 10 |   still working to fulfill purpose
+| [Deployed](https://custom-quiz-api.herokuapp.com/) and [usable](./instructions.md) | 15 | 15|
 | TDD approach | 15 | 15 |
 | Adhere to AirBnB style guide| 5 | 5 |
 
@@ -53,6 +53,6 @@ Must receive higher than `70%` to pass the project.
 
 | Section | Possible | Earned | Final (%) |
 | ------- | -------- | ------ | --------- |
-| Functional Requirements | 80 | 30 | 24% |
-| Non-Functional Requirements | 80 | 65 | 52% |
-| TOTAL | 160 | 95 | 76% |
+| Functional Requirements | 80 | 80 | 50% |
+| Non-Functional Requirements | 80 | 75 | 97% |
+| TOTAL | 160 | 155 | 97% |

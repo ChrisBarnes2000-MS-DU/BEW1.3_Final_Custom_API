@@ -44,15 +44,15 @@ router.get('/:questionID', (req, res) => {
 
 
 // Submit each question
-// router.post('/:questionID', (req, res) => {
-//     Question.find({ questionID: req.params.questionID }).then(quiz => {
-//         questions.answers_given.pop(question);
-//         res.json((quiz, question));
-//         // res.redirect(`/`);
-//         return topic.save();
-//     }).catch(err => {
-//         console.log(err.message);
-//     });
-// })
+router.post('/:questionID', (req, res) => {
+    Question.find({ questionID: req.params.questionID }).then(quiz => {
+        questions.answers_given.pop(question);
+        res.json((quiz, question));
+        // res.redirect(`/`);
+        return topic.save();
+    }).catch(err => {
+        console.log(err.message);
+    });
+})
 
 module.exports = router;

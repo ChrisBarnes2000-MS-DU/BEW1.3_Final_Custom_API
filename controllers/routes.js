@@ -22,7 +22,8 @@ router.get('/profile/:username', (req, res) => {
     Topic.find({ username: req.params.username }).populate({ path: 'comments', populate: { path: 'username' } }).populate('username')
         .lean()
         .then(topics => {
-            res.render('topics-index', { topics, currentUser });
+            res.json(currentUser)
+            // res.render('topics-index', { topics, currentUser });
         }).catch(err => {
             console.log(err.message);
         })

@@ -36,31 +36,30 @@ const sampleUser = {
 };
 
 
-user = new User(sampleUser)
-user.save()
-
-
 // Topic that we'll use for testing purposes
 const initTopic = {
     title: 'Test-Topic-Init',
-    author: user,
     // summary: 'topic summary',
 };
 
 
 const newTopic = {
     title: 'Test-Topic-New',
-    author: user,
     // summary: 'topic summary',
 };
 
 
 describe('Topics', () => {
+    before( (done) => {
+        user = new User(sampleUser)
+        user.save()
+        return done()
+    })
+
     afterEach((done) => {
-        promise1 = Topic.findOneAndRemove({'topicID': 'Test-Topic-New'})
-        promise2 = Topic.findOneAndRemove({'topicID': 'Test-Topic-Init'})
-        promise3 = User.findOneAndRemove({ username: 'topicstest' })
-        Promise.all([promise1, promise2, promise3]).then(() => done())
+        promise1 = Topic.findOneAndRemove({'title': 'Test-Topic-New'})
+        promise2 = Topic.findOneAndRemove({'title': 'Test-Topic-Init'})
+        Promise.all([promise1, promise2]).then(() => done())
     });
 
 
@@ -74,30 +73,29 @@ describe('Topics', () => {
     });
 
 
-    it("Should be able to Create a new Topic", (done) => {
-        // Checks how many topics there are now
-        Topic.estimatedDocumentCount().then((initialCount) => {
-            agent.post("/topics/new")
-            //     // This line fakes a form post,
-            //     // since we're not actually filling out a form
-                .set("content-type", "application/x-www-form-urlencoded")
-            //     // Make a request to create another
-                .send(newTopic).then(res => {
-                Topic.estimatedDocumentCount().then((newCount) => {
-                        // Check that the database has one more topic in it
-                        expect(res).to.have.status(200)
-                        // Check that the database has one more topic in it
-                        expect(newCount).to.be.equal(initialCount + 1)
-                        return done();
-                    }).catch((err) => { done(err) });
+    it('Should POST a new Topic', (done) => {
+        agent.post('/topics/new')
+            .set("content-type", "application/x-www-form-urlencoded")
+            // .set('jwttoken', jwt.sign({ username: 'topicstest' }, process.env.JWT_SECRET))
+            .send(initTopic)
+            .then(res => {
+                assert.equal(res.status, 200)
+                assert.equal(res.body.title, 'Test-Topic-Init')
+                assert.isNotEmpty(res.body._id)
+
+                // make sure data actually got added to the database
+                Dog.find({ name: 'Test-Topic-Init' }).then(result => {
+                    assert.equal(result.length, 1)
                 })
                 return done()
-        }).catch((err) => { done(err) });
-    });
+            }).catch(err => {
+                return done(err)
+            })
+    })
 
 
     it("Should have Details about a Topic in json", (done) => {
-        topic = new Topic(initTopic);
+        topic = new Topic({ title: 'Test-Topic-Init', author: user});
         topic.save().then((topic) => {
             agent.get("/topics/Test-Topic-Init")
                 .end((err, res) => {
@@ -110,7 +108,7 @@ describe('Topics', () => {
 
 
     it("Should be able to Update a Topic", (done) => {
-        topic = new Topic(initTopic);
+        topic = new Topic({ title: 'Test-Topic-Init', author: user });
         topic.save().then((topic) => {
             agent.put("/topics/Test-Topic-Init")
             .send(newTopic)
@@ -127,7 +125,7 @@ describe('Topics', () => {
 
 
     it("Should be able to Delete a Topic", (done) => {
-        topic = new Topic(initTopic);
+        topic = new Topic({ title: 'Test-Topic-Init', author: user });
         topic.save()
         agent.delete("/topics/Test-Topic-Init")
             .then((err, res) => {
@@ -140,5 +138,9 @@ describe('Topics', () => {
         return done()
     });
 
+
+    after( (done) => {
+        User.findOneAndRemove({ username: 'topicstest' }).then(() => done())
+    })
 });
 

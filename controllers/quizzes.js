@@ -25,26 +25,45 @@ router.get('/:quizID', (req, res) => {
 
 
 // CREATE A QUIZ
-router.post("/new", (req, res) => {
-    let topicID = req.topicID;
-    if (!req.user) {
-        return res.status(401); // UNAUTHORIZED
-    } else {
-        // INSTANTIATE INSTANCE OF MODEL
-        const quiz = new Quiz(req.body);
-        
-        // SAVE INSTANCE OF Quiz MODEL TO DB
-        quiz.save().then(() =>{
-            return Topic.findOne({ _id: topicID });
-        }).then(topic => {
-            topic.quizzes.unshift(quiz)
-            topic.save()
-            res.json(quiz)
-            // res.redirect(`/`);
-        }).catch(err => { console.log(err) });
-    return done()
-    }
-});
+it('Should POST a new Quiz', (done) => {
+    agent.post('/topics/new')
+        .set("content-type", "application/x-www-form-urlencoded")
+        // .set('jwttoken', jwt.sign({ username: 'topicstest' }, process.env.JWT_SECRET))
+        .send(initTopic)
+        .then(res => {
+            assert.equal(res.status, 200)
+            assert.equal(res.body.title, 'Test-Topic-Init')
+            assert.isNotEmpty(res.body._id)
+
+            // make sure data actually got added to the database
+            Dog.find({ name: 'Test-Topic-Init' }).then(result => {
+                assert.equal(result.length, 1)
+            })
+            return done()
+        }).catch(err => {
+            return done(err)
+        })
+})
+
+// router.post("/new", (req, res) => {
+//     let title = req.title;
+//     if (!req.user) {
+//         return res.status(401); // UNAUTHORIZED
+//     } else {
+//         // INSTANTIATE INSTANCE OF MODEL
+//         const quiz = new Quiz(req.body);
+//         // SAVE INSTANCE OF Quiz MODEL TO DB
+//         quiz.save().then(() =>{
+//             return Topic.findOne({ title: title });
+//         }).then(topic => {
+//             topic.quizzes.unshift(quiz)
+//             topic.save()
+//             res.json(quiz)
+//             // res.redirect(`/`);
+//         }).catch(err => { console.log(err) });
+//     return done()
+//     }
+// });
 
 
 // UPDATE SPECIFIC QUIZ
@@ -71,14 +90,14 @@ router.put("/:quizID", (req, res) => {
 
 // DELETE SPECIFIC QUIZ
 router.delete("/:quizID", (req, res) => {
-    let topicID = req.topicID;
+    let title = req.title;
     if (!req.user) {
         return res.status(401); // UNAUTHORIZED
     } else {
         // Delete INSTANCE OF Quiz MODEL TO DB
         quiz = Quiz.findOneAndDelete({ quizID: req.params.quizID })
             .then(() => {
-                return Topic.findOne({ _id: topicID });
+                return Topic.findOne({ title: title });
             })
             .then(topic => {
                 topic.quizzes.pop(quiz);

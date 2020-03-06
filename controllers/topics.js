@@ -16,9 +16,9 @@ router.get('/', (req, res, next) => {
 
 
 // GET SPECIFIC TOPIC
-router.get('/:topicID', (req, res, next) => {
-    let mytopicID = req.params.topicID
-    Topic.findOne({ topicID: mytopicID }).then(result => {
+router.get('/:title', (req, res, next) => {
+    let mytitle = req.params.title
+    Topic.findOne({ title: mytitle }).then(result => {
         res.json(result)
     })
 });
@@ -28,7 +28,7 @@ router.get('/:topicID', (req, res, next) => {
 router.post("/new", (req, res) => {
     if (req.user) {
         const topic = new Topic(req.body);
-        topic.author = req.user._id;
+        // topic.author = req.user._id;
         topic.save().then(() => {
                 return User.findById(req.user._id);
             }).then(user => {
@@ -36,7 +36,7 @@ router.post("/new", (req, res) => {
                 user.save();
                 // REDIRECT TO THE NEW POST
                 res.json(topic)
-                // res.redirect(`/topics/${topic.topicID}`);
+                // res.redirect(`/topics/${topic.title}`);
             }).catch(err => { console.log(err.message); });
     } else {
         return res.status(401); // UNAUTHORIZED
@@ -45,20 +45,20 @@ router.post("/new", (req, res) => {
 
 
 // UPDATE SPECIFIC TOPIC
-router.put("/:topicID", (req, res) => {
+router.put("/:title", (req, res) => {
     if (req.user) {
-        Topic.findOneAndUpdate({ topicID: req.params.topicID }).then(topic => {
+        Topic.findOneAndUpdate({ title: req.params.title }).then(topic => {
             topic.title = req.body.title;
             // topic.summary = req.body.summary;
             topic.save();
             res.json(topic);
             // res.status(200);
-        }).then(author => {
-            author.topics.pop(topic);
-            author.topics.unshift(topic);
-            res.json((Topic, author));
-            // res.redirect(`/`);
-            return author.save();
+        // }).then(author => {
+        //     author.topics.pop(topic);
+        //     author.topics.unshift(topic);
+        //     res.json((Topic, author));
+        //     // res.redirect(`/`);
+        //     return author.save();
         }).catch (err => {
             console.log(err.message);
             });
@@ -69,18 +69,18 @@ router.put("/:topicID", (req, res) => {
 
 
 // DELETE SPECIFIC TOPIC
-router.delete("/:topicID", (req, res) => {
+router.delete("/:title", (req, res) => {
     if (req.user) {
-        topic = Topic.findOneAndDelete({ topicID: req.params.topicID })
+        topic = Topic.findOneAndDelete({ title: req.params.title })
             .then(() => {
                 return User.findById(req.user._id);
             })
-            .then(author => {
-                author.topics.pop(topic);
-                res.json(author);
-                // res.redirect(`/`);
-                return author.save();
-            })
+            // .then(author => {
+            //     author.topics.pop(topic);
+            //     res.json(author);
+            //     // res.redirect(`/`);
+            //     return author.save();
+            // })
             .catch(err => {
                 console.log(err);
             });
@@ -92,8 +92,8 @@ router.delete("/:topicID", (req, res) => {
 
 
 //------------ QUIZ ROUTES ------------\\
-router.use('/:topicID/quizzes', function (req, res, next) {
-    req.topicID = req.params.topicID;
+router.use('/:title/quizzes', function (req, res, next) {
+    req.title = req.params.title;
     next()
 }, quizRoutes);
 
