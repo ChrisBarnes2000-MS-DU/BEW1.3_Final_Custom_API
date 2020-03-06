@@ -1,7 +1,7 @@
 # Custom API using Node.js
 
-[![GitHub](https://img.shields.io/github/forks/ChrisBarnes7404/Quiz_API.svg?style=flat-square)](https://github.com/ChrisBarnes7404/Quiz_API/network)
-[![GitHub](https://img.shields.io/github/issues/ChrisBarnes7404/Quiz_API.svg?style=flat-square)](https://github.com/ChrisBarnes7404/Quiz_API/issues)
+[![GitHub](https://img.shields.io/github/forks/ChrisBarnes7404/BEW1.3_Final_Custom_API.svg?style=flat-square)](https://github.com/ChrisBarnes7404/Quiz_API/network)
+[![GitHub](https://img.shields.io/github/issues/ChrisBarnes7404/BEW1.3_Final_Custom_API.svg?style=flat-square)](https://github.com/ChrisBarnes7404/Quiz_API/issues)
 
 ## Objectives
 - Practice the SDLC by completing a project from proposal to deployment with a focus on Test Driven Development practices.
